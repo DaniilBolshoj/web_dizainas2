@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="lt" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimalistinė Parduotuvė</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            DEFAULT: '#202321',
+                            light: '#4a4a4a',
+                            accent: '#b9855b',
+                            bg: '#f8f6f0'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8f6f0; color: #202321; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="h-full flex flex-col antialiased selection:bg-[#b9855b] selection:text-white">
+
+    <header class="sticky top-0 z-40 bg-[#f8f6f0]/90 backdrop-blur-md border-b border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-8">
+                <a href="#" class="text-2xl font-bold tracking-wider uppercase text-stone-900">ATELIER</a>
+                <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-stone-600">
+                    <button onclick="filterCategory('all')" class="nav-btn transition-colors hover:text-stone-950 text-stone-955 font-semibold active-cat" data-cat="all">Visi</button>
+                    <button onclick="filterCategory('women')" class="nav-btn transition-colors hover:text-stone-950" data-cat="women">Moterys</button>
+                    <button onclick="filterCategory('men')" class="nav-btn transition-colors hover:text-stone-950" data-cat="men">Vyrai</button>
+                    <button onclick="filterCategory('kids')" class="nav-btn transition-colors hover:text-stone-950" data-cat="kids">Vaikai</button>
+                    <button onclick="filterCategory('shoes')" class="nav-btn transition-colors hover:text-stone-950" data-cat="shoes">Batai</button>
+                    <button onclick="filterCategory('accessories')" class="nav-btn transition-colors hover:text-stone-950" data-cat="accessories">Aksesuarai</button>
+                </nav>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div class="relative hidden sm:block">
+                    <input type="text" id="searchInput" placeholder="Ieškoti..." oninput="handleSearch(this.value)" class="bg-stone-200/60 text-sm rounded-full pl-9 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-stone-400 w-48 lg:w-64 transition-all">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-stone-400 text-xs"></i>
+                </div>
+                <button onclick="toggleCart()" class="relative p-2 rounded-full hover:bg-stone-200 transition-colors">
+                    <i class="fa-solid fa-bag-shopping text-lg"></i>
+                    <span id="cartBadge" class="absolute -top-1 -right-1 bg-[#b9855b] text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section class="relative bg-stone-900 text-white py-16 px-4 sm:px-6 lg:px-8 mb-10 overflow-hidden">
+        <div class="absolute inset-0 opacity-30 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1600&q=80')"></div>
+        <div class="relative max-w-7xl mx-auto flex flex-col items-center text-center">
+            <span class="text-xs uppercase tracking-widest bg-white/10 px-3 py-1 rounded-full mb-4 font-medium backdrop-blur-sm">Nauja Kolekcija 2026</span>
+            <h1 class="text-4xl sm:text-6xl font-light tracking-tight mb-4 max-w-2xl">Tvarus stilius ir kasdienis jaukumas</h1>
+            <p class="text-stone-300 text-sm sm:text-base max-w-lg mb-8 font-light">Atraskite kruopščiai atrinktą drabužių, avalynės ir aksesuarų kolekciją iš natūralių medžiagų.</p>
+            <button onclick="filterCategory('all')" class="bg-white text-stone-900 px-8 py-3 rounded-full text-sm font-medium hover:bg-stone-100 transition-all shadow-lg">Peržiūrėti produktus</button>
+        </div>
+    </section>
+
+    <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-20">
+        <!-- Mobile Category Selector -->
+        <div class="flex md:hidden gap-2 overflow-x-auto hide-scrollbar pb-4 mb-6">
+            <button onclick="filterCategory('all')" class="mob-cat-btn whitespace-nowrap px-4 py-2 rounded-full text-xs font-medium bg-stone-900 text-white" data-cat="all">Visi</button>
+            <button onclick="filterCategory('women')" class="mob-cat-btn whitespace-nowrap px-4 py-2 rounded-full text-xs font-medium bg-stone-200 text-stone-700" data-cat="women">Moterys</button>
+            <button onclick="filterCategory('men')" class="mob-cat-btn whitespace-nowrap px-4 py-2 rounded-full text-xs font-medium bg-stone-200 text-stone-700" data-cat="men">Vyrai</button>
+            <button onclick="filterCategory('kids')" class="mob-cat-btn whitespace-nowrap px-4 py-2 rounded-full text-xs font-medium bg-stone-200 text-stone-700" data-cat="kids">Vaikai</button>
+            <button onclick="filterCategory('shoes')" class="mob-cat-btn whitespace-nowrap px-4 py-2 rounded-full text-xs font-medium bg-stone-200 text-stone-700" data-cat="shoes">Batai</button>
+            <button onclick="filterCategory('accessories')" class="mob-cat-btn whitespace-nowrap px-4 py-2 rounded-full text-xs font-medium bg-stone-200 text-stone-700" data-cat="accessories">Aksesuarai</button>
+        </div>
+
+        <div class="flex justify-between items-center mb-6">
+            <h2 id="sectionTitle" class="text-xl font-semibold tracking-tight text-stone-900">Visi produktai</h2>
+            <span id="productCount" class="text-xs text-stone-500">0 produktų</span>
+        </div>
+
+        <!-- Product Grid -->
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Dynamically populated -->
+        </div>
+        
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden text-center py-20">
+            <i class="fa-solid fa-box-open text-4xl text-stone-300 mb-4"></i>
+            <p class="text-stone-500 font-medium">Nerasta jokių produktų pagal jūsų užklausą.</p>
+        </div>
+    </main>
+
+    <div id="productModal" class="fixed inset-0 z-50 bg-stone-950/50 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl relative animate-in fade-in zoom-in duration-200">
+            <button onclick="closeModal()" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center text-stone-700 transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="modalContent" class="grid grid-cols-1 md:grid-cols-2 max-h-[85vh] overflow-y-auto">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <div id="cartDrawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+        <div class="absolute inset-0 bg-stone-950/40 backdrop-blur-xs transition-opacity" onclick="toggleCart()"></div>
+        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+                <div class="p-6 border-b border-stone-100 flex items-center justify-between">
+                    <h3 class="font-semibold text-lg">Jūsų krepšelis</h3>
+                    <button onclick="toggleCart()" class="text-stone-400 hover:text-stone-700"><i class="fa-solid fa-xmark text-lg"></i></button>
+                </div>
+                <div id="cartItemsList" class="flex-1 overflow-y-auto p-6 space-y-4">
+                    <!-- Cart items -->
+                </div>
+                <div class="p-6 border-t border-stone-100 bg-stone-50">
+                    <div class="flex justify-between mb-4 font-medium">
+                        <span>Iš viso:</span>
+                        <span id="cartTotalPrice" class="text-lg font-bold">0 €</span>
+                    </div>
+                    <button onclick="checkout()" class="w-full bg-stone-900 text-white py-3 rounded-xl font-medium hover:bg-stone-800 transition-colors shadow-sm">Atsiskaityti</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-stone-900 text-white px-5 py-3 rounded-xl shadow-xl flex items-center gap-3 transform translate-y-24 opacity-0 transition-all duration-300">
+        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="toastMessage" class="text-sm font-medium">Produktas pridėtas į krepšelį</span>
+    </div>
+
+    <script>
+        const products = [
+            // Women
+            {
+                id: 'w-1',
+                category: 'women',
+                categoryName: 'Moterys',
+                name: 'Milano lininė midi suknelė',
+                price: 139,
+                material: 'Linas',
+                description: 'Lengva, laisvo kirpimo lininė suknelė vasaros karščiams ir tylioms vakaro valandoms.',
+                colors: [{name: 'Smėlio', hex: '#cdbda8'}, {name: 'Juoda', hex: '#202321'}],
+                sizes: ['XS', 'S', 'M', 'L', 'XL'],
+                image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'w-2',
+                category: 'women',
+                categoryName: 'Moterys',
+                name: 'Verona kašmyro megztinis',
+                price: 89,
+                material: 'Vilna (Kašmyras)',
+                description: 'Minkštas kašmyro megztinis apvalia iškirpte – jaukumas be papildomo svorio.',
+                colors: [{name: 'Kreida', hex: '#e8e2d7'}],
+                sizes: ['XS', 'S', 'M', 'L', 'XL'],
+                image: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'w-3',
+                category: 'women',
+                categoryName: 'Moterys',
+                name: 'Soho plačios tencelio kelnės',
+                price: 109,
+                material: 'Tencelis',
+                description: 'Plataus silueto tencelio kelnės su aukštu liemeniu, tinkančios prie beveik visko.',
+                colors: [{name: 'Grafito', hex: '#4a4a4a'}],
+                sizes: ['XS', 'S', 'M', 'L', 'XL'],
+                image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80'
+            },
+            // Men
+            {
+                id: 'm-1',
+                category: 'men',
+                categoryName: 'Vyrai',
+                name: 'Classic Oxford marškiniai',
+                price: 74,
+                material: 'Organinė medvilnė',
+                description: 'Klasikiniai oksfordo marškiniai iš organinės medvilnės – tinka tiek darbui, tiek laisvalaikiui.',
+                colors: [{name: 'Balta', hex: '#f4f2ec'}, {name: 'Navy', hex: '#1d2d43'}],
+                sizes: ['XS', 'S', 'M', 'L', 'XL'],
+                image: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'm-2',
+                category: 'men',
+                categoryName: 'Vyrai',
+                name: 'Nordic vilnos paltas',
+                price: 189,
+                material: 'Perdirbta vilna',
+                description: 'Ilgas vilnos paltas švariomis linijomis, sukurtas šaltajam sezonui.',
+                colors: [{name: 'Karamelė', hex: '#b9855b'}, {name: 'Juoda', hex: '#202321'}],
+                sizes: ['XS', 'S', 'M', 'L', 'XL'],
+                image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'm-3',
+                category: 'men',
+                categoryName: 'Vyrai',
+                name: 'Malmö struktūruotas švarkas',
+                price: 159,
+                material: 'Vilna',
+                description: 'Struktūruotas vilnos švarkas su aiškiu siluetu kasdieniniams deriniams.',
+                colors: [{name: 'Alyvuogių', hex: '#68705b'}],
+                sizes: ['XS', 'S', 'M', 'L', 'XL'],
+                image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80'
+            },
+            // Kids
+            {
+                id: 'k-1',
+                category: 'kids',
+                categoryName: 'Vaikai',
+                name: 'Mėlynas Little Cloud kardiganas',
+                price: 64,
+                material: 'Merino vilna',
+                description: 'Švelnus merino vilnos kardiganas vaikams – šiltas, bet nesunkus.',
+                colors: [{name: 'Mėlis', hex: '#8ba7b8'}],
+                sizes: ['92', '98', '104', '110', '116', '122'],
+                image: 'https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'k-2',
+                category: 'kids',
+                categoryName: 'Vaikai',
+                name: 'Sandstone drobės kelnės',
+                price: 52,
+                material: 'Ekologiška medvilnė',
+                description: 'Patvarios ekologiškos medvilnės kelnės, sukurtos aktyvioms vaikų dienoms.',
+                colors: [{name: 'Smėlio', hex: '#cdbda8'}],
+                sizes: ['92', '98', '104', '110', '116', '122'],
+                image: 'https://images.unsplash.com/photo-1503944583220-7eeec390d8af?auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'k-3',
+                category: 'kids',
+                categoryName: 'Vaikai',
+                name: 'Forest quilted liemenė',
+                price: 78,
+                material: 'Perdirbtas nailonas',
+                description: 'Prasegama pikuota liemenė be rankovių – papildomas šilumos sluoksnis žaidimams lauke.',
+                colors: [{name: 'Miško', hex: '#3d5547'}],
+                sizes: ['92', '98', '104', '110', '116', '122'],
+                image: 'https://images.unsplash.com/photo-1471286174890-9c112ffca5b4?auto=format&fit=crop&w=800&q=80'
+            },
+            // Shoes
+            {
+                id: 's-1',
+                category: 'shoes',
+                categoryName: 'Batai',
+                name: 'Roma odiniai loaferiai',
+                price: 149,
+                material: 'Oda',
+                description: 'Minimalistiniai odiniai loaferiai su švelniu blizgesiu ir patogiu vidpadžiu.',
+                colors: [{name: 'Juoda', hex: '#202321'}, {name: 'Riešutų', hex: '#805637'}],
+                sizes: ['38', '39', '40', '41', '42', '43', '44'],
+                image: 'https://images.unsplash.com/photo-1533867617858-e7d97e0afd8b?auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 's-2',
+                category: 'shoes',
+                categoryName: 'Batai',
+                name: 'Copenhagen minimalistiniai sportbačiai',
+                price: 119,
+                material: 'Perdirbta guma',
+                description: 'Švarios linijos ir perdirbtos gumos vidpadis – kasdieniai sportbačiai be triukšmo.',
+                colors: [{name: 'Kreida', hex: '#e8e2d7'}],
+                sizes: ['38', '39', '40', '41', '42', '43', '44'],
+                image: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 's-3',
+                category: 'shoes',
+                categoryName: 'Batai',
+                name: 'Alpine žieminiai aulinukai',
+                price: 169,
+                material: 'Oda',
+                description: 'Šilti odiniai aulinukai su patvaria padu žiemos sąlygoms.',
+                colors: [{name: 'Riešutų', hex: '#805637'}],
+                sizes: ['38', '39', '40', '41', '42', '43', '44'],
+                image: 'https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&w=800&q=80'
+            },
+            // Accessories
+            {
+                id: 'a-1',
+                category: 'accessories',
+                categoryName: 'Aksesuarai',
+                name: 'Atelier odinis krepšys',
+                price: 129,
+                material: 'Oda',
+                description: 'Erdvus odinis krepšys su vidinėmis kišenėmis kasdieniams daiktams.',
+                colors: [{name: 'Espresso', hex: '#4b3027'}, {name: 'Juoda', hex: '#202321'}],
+                sizes: ['Universalus dydis'],
+                image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'a-2',
+                category: 'accessories',
+                categoryName: 'Aksesuarai',
+                name: 'Alba vilnos šalikas',
+                price: 58,
+                material: 'Vilna',
+                description: 'Minkštas vilnos šalikas, kuris papildo bet kokį žieminį įvaizdį.',
+                colors: [{name: 'Pieno', hex: '#e8e2d7'}],
+                sizes: ['Universalus dydis'],
+                image: 'https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&w=800&q=80'
+            },
+            {
+                id: 'a-3',
+                category: 'accessories',
+                categoryName: 'Aksesuarai',
+                name: 'Linea klasikinis diržas',
+                price: 49,
+                material: 'Oda',
+                description: 'Klasikinis odinis diržas su metaline sagtimi – tinka beveik prie visų kelnių.',
+                colors: [{name: 'Juoda', hex: '#202321'}],
+                sizes: ['Universalus dydis'],
+                image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=800&q=80'
+            }
+        ];
+
+        let currentCategory = 'all';
+        let searchQuery = '';
+        let cart = [];
+
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            const emptyState = document.getElementById('emptyState');
+            const productCount = document.getElementById('productCount');
+            const sectionTitle = document.getElementById('sectionTitle');
+
+            // Titles
+            const titles = {
+                all: 'Visi produktai',
+                women: 'Moterys',
+                men: 'Vyrai',
+                kids: 'Vaikai',
+                shoes: 'Batai',
+                accessories: 'Aksesuarai'
+            };
+            sectionTitle.textContent = titles[currentCategory] || 'Produktai';
+
+            const filtered = products.filter(p => {
+                const matchCat = currentCategory === 'all' || p.category === currentCategory;
+                const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                    p.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                    p.material.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchCat && matchSearch;
+            });
+
+            productCount.textContent = `${filtered.length} produkt${filtered.length === 1 ? 'as' : filtered.length % 10 === 1 && filtered.length % 100 !== 11 ? 'as' : 'ai'}`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            grid.innerHTML = filtered.map(p => `
+                <div class="group cursor-pointer bg-white rounded-2xl overflow-hidden border border-stone-200/60 hover:shadow-xl transition-all duration-300 flex flex-col" onclick="openModal('${p.id}')">
+                    <div class="relative aspect-[4/5] bg-stone-100 overflow-hidden">
+                        <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-stone-900 text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full">${p.categoryName}</span>
+                    </div>
+                    <div class="p-5 flex flex-col flex-1 justify-between">
+                        <div>
+                            <div class="text-xs text-stone-500 mb-1">${p.material}</div>
+                            <h3 class="font-medium text-stone-900 group-hover:text-[#b9855b] transition-colors line-clamp-1">${p.name}</h3>
+                        </div>
+                        <div class="flex items-center justify-between mt-4 pt-4 border-t border-stone-100">
+                            <span class="font-semibold text-stone-900">${p.price} €</span>
+                            <button onclick="event.stopPropagation(); quickAdd('${p.id}')" class="bg-stone-900 text-white w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#b9855b] transition-colors shadow-sm">
+                                <i class="fa-solid fa-plus text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterCategory(cat) {
+            currentCategory = cat;
+            // Update desktop buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.dataset.cat === cat) {
+                    btn.classList.add('text-stone-950', 'font-semibold');
+                    btn.classList.remove('text-stone-600');
+                } else {
+                    btn.classList.remove('text-stone-950', 'font-semibold');
+                    btn.classList.add('text-stone-600');
+                }
+            });
+            // Update mobile buttons
+            document.querySelectorAll('.mob-cat-btn').forEach(btn => {
+                if (btn.dataset.cat === cat) {
+                    btn.classList.add('bg-stone-900', 'text-white');
+                    btn.classList.remove('bg-stone-200', 'text-stone-700');
+                } else {
+                    btn.classList.remove('bg-stone-900', 'text-white');
+                    btn.classList.add('bg-stone-200', 'text-stone-700');
+                }
+            });
+            renderProducts();
+        }
+
+        function handleSearch(val) {
+            searchQuery = val;
+            renderProducts();
+        }
+
+        function openModal(id) {
+            const p = products.find(item => item.id === id);
+            if (!p) return;
+
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = `
+                <div class="aspect-square md:aspect-auto bg-stone-100">
+                    <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover">
+                </div>
+                <div class="p-6 md:p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs uppercase tracking-wider text-stone-500 bg-stone-100 px-2.5 py-1 rounded-full">${p.categoryName}</span>
+                            <span class="text-sm text-stone-500 font-medium">${p.material}</span>
+                        </div>
+                        <h2 class="text-2xl font-semibold text-stone-900 mb-2">${p.name}</h2>
+                        <div class="text-xl font-bold text-stone-900 mb-4">${p.price} €</div>
+                        <p class="text-stone-600 text-sm leading-relaxed mb-6">${p.description}</p>
+                        
+                        <div class="mb-5">
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-stone-500 mb-2">Spalva</label>
+                            <div class="flex gap-2">
+                                ${p.colors.map((c, i) => `
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="modalColor" value="${c.name}" ${i === 0 ? 'checked' : ''} class="peer sr-only">
+                                        <span class="w-7 h-7 rounded-full border border-stone-300 flex items-center justify-center peer-checked:ring-2 peer-checked:ring-offset-2 peer-checked:ring-stone-900 block" style="background-color: ${c.hex};" title="${c.name}"></span>
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-stone-500 mb-2">Dydis</label>
+                            <div class="flex flex-wrap gap-2">
+                                ${p.sizes.map((s, i) => `
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="modalSize" value="${s}" ${i === 0 ? 'checked' : ''} class="peer sr-only">
+                                        <span class="px-3.5 py-2 text-xs font-medium rounded-lg border border-stone-200 peer-checked:bg-stone-900 peer-checked:text-white peer-checked:border-stone-900 block transition-colors">${s}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="addToCartFromModal('${p.id}')" class="w-full bg-stone-900 text-white py-3.5 rounded-xl font-medium hover:bg-stone-800 transition-colors shadow-sm flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-bag-shopping"></i> Pridėti į krepšelį
+                    </button>
+                </div>
+            `;
+            document.getElementById('productModal').classList.remove('hidden');
+            document.getElementById('productModal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('productModal').classList.remove('flex');
+            document.getElementById('productModal').classList.add('hidden');
+        }
+
+        function quickAdd(id) {
+            const p = products.find(item => item.id === id);
+            if (!p) return;
+            cart.push({
+                ...p,
+                cartId: Math.random().toString(36).substr(2, 9),
+                selectedColor: p.colors[0].name,
+                selectedSize: p.sizes[0],
+                quantity: 1
+            });
+            updateCartUI();
+            showToast(`Pridėta į krepšelį: ${p.name}`);
+        }
+
+        function addToCartFromModal(id) {
+            const p = products.find(item => item.id === id);
+            if (!p) return;
+
+            const selectedColorInput = document.querySelector('input[name="modalColor"]:checked');
+            const selectedSizeInput = document.querySelector('input[name="modalSize"]:checked');
+
+            cart.push({
+                ...p,
+                cartId: Math.random().toString(36).substr(2, 9),
+                selectedColor: selectedColorInput ? selectedColorInput.value : p.colors[0].name,
+                selectedSize: selectedSizeInput ? selectedSizeInput.value : p.sizes[0],
+                quantity: 1
+            });
+            closeModal();
+            updateCartUI();
+            showToast(`Pridėta į krepšelį: ${p.name}`);
+        }
+
+        function removeFromCart(cartId) {
+            cart = cart.filter(item => item.cartId !== cartId);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById('cartBadge');
+            const list = document.getElementById('cartItemsList');
+            const totalElem = document.getElementById('cartTotalPrice');
+
+            if (cart.length > 0) {
+                badge.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            if (cart.length === 0) {
+                list.innerHTML = `
+                    <div class="text-center py-16 text-stone-400">
+                        <i class="fa-solid fa-bag-shopping text-3xl mb-3"></i>
+                        <p class="text-sm font-medium">Jūsų krepšelis tuščias</p>
+                    </div>
+                `;
+                totalElem.textContent = '0 €';
+                return;
+            }
+
+            let total = 0;
+            list.innerHTML = cart.map(item => {
+                total += item.price * item.quantity;
+                return `
+                    <div class="flex gap-4 items-center bg-stone-50 p-3 rounded-xl border border-stone-100">
+                        <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <h4 class="font-medium text-sm text-stone-900">${item.name}</h4>
+                            <div class="text-xs text-stone-500 mt-0.5">${item.selectedColor} / ${item.selectedSize}</div>
+                            <div class="text-sm font-semibold text-stone-900 mt-1">${item.price} €</div>
+                        </div>
+                        <button onclick="removeFromCart('${item.cartId}')" class="text-stone-400 hover:text-red-500 p-2"><i class="fa-solid fa-trash-can text-xs"></i></button>
+                    </div>
+                `;
+            }).join('');
+
+            totalElem.textContent = `${total} €`;
+        }
+
+        function toggleCart() {
+            const drawer = document.getElementById('cartDrawer');
+            drawer.classList.toggle('hidden');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const msgElem = document.getElementById('toastMessage');
+            msgElem.textContent = msg;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+
+        function checkout() {
+            if (cart.length === 0) return;
+            alert('Ačiū už jūsų užsakymą! Užsakymas sėkmingai pateiktas.');
+            cart = [];
+            updateCartUI();
+            toggleCart();
+        }
+
+        // Initialize application on load
+        renderProducts();
+    </script>
+</body>
+</html>
