@@ -1,72 +1,71 @@
 const baseProducts = [
-  { id: 1, name: "Vilnos overshirt", category: "clothing", categoryLabel: "Drabužiai", price: 89, image: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=900&q=88", badge: "Nauja", description: "Minkštas, struktūriškas vilnos mišinio sluoksnis, sukurtas dėvėti vienas arba ant marškinėlių." },
-  { id: 2, name: "Kasdieniai marškinėliai", category: "clothing", categoryLabel: "Drabužiai", price: 39, image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=900&q=85", badge: "Bestseller", description: "Sunkesnio medvilnės džersio marškinėliai su laisvu siluetu ir švaria apdaila." },
-  { id: 3, name: "Canvas 01 sportbačiai", category: "shoes", categoryLabel: "Avalynė", price: 110, image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=88", badge: "", description: "Lengvi drobiniai sportbačiai su tvirtu guminiu padu ir universaliu profiliu." },
-  { id: 4, name: "Odinis diržas", category: "accessories", categoryLabel: "Aksesuarai", price: 45, image: "https://images.unsplash.com/photo-1624222247344-550fb60583dc?auto=format&fit=crop&w=900&q=85", badge: "", description: "Klasikinis natūralios odos diržas, kuris su laiku įgauna individualų charakterį." },
-  { id: 5, name: "Ribbed megztinis", category: "clothing", categoryLabel: "Drabužiai", price: 75, image: "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=900&q=88", badge: "", description: "Šiltas briaunuotas megztinis su apvalia apykakle ir subtiliai laisvu kirpimu." },
-  { id: 6, name: "Suede 02 batai", category: "shoes", categoryLabel: "Avalynė", price: 135, image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=900&q=88", badge: "Nauja", description: "Minkštos zomšos batai kasdieniam ritmui, papildyti patogiu amortizuojančiu padu." },
-  { id: 7, name: "Tekstūrinė kepurė", category: "accessories", categoryLabel: "Aksesuarai", price: 29, image: "https://images.unsplash.com/photo-1521369909029-2afed882baee?auto=format&fit=crop&w=900&q=85", badge: "", description: "Šilta, tekstūrinė kepurė su subtilia Northline etikete priekyje." },
-  { id: 8, name: "Kasdienis krepšys", category: "accessories", categoryLabel: "Aksesuarai", price: 98, image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=85", badge: "", description: "Talpus drobinis krepšys su odinėmis rankenomis ir vidine kišene smulkiems daiktams." },
-  { id: 9, name: "Lininiai marškiniai", category: "clothing", categoryLabel: "Drabužiai", price: 69, image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=900&q=85", badge: "Nauja", description: "Lengvi lininiai marškiniai su laisvu kirpimu, tinkami tiek miestui, tiek savaitgalio kelionei." },
-  { id: 10, name: "Tiesaus kirpimo džinsai", category: "clothing", categoryLabel: "Drabužiai", price: 95, image: "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=900&q=85", badge: "", description: "Patvaraus denimo džinsai su tiesiu siluetu ir vidutinio aukščio liemeniu." },
-  { id: 11, name: "Vilnonis švarkas", category: "clothing", categoryLabel: "Drabužiai", price: 149, image: "https://images.unsplash.com/photo-1598808503746-f34c53b9323e?auto=format&fit=crop&w=900&q=85", badge: "Atrinkta", description: "Minimalistinis vilnos švarkas, sukurtas sluoksniuoti ir dėvėti ne vieną sezoną." },
-  { id: 12, name: "Medvilninis polo", category: "clothing", categoryLabel: "Drabužiai", price: 55, image: "https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=900&q=88", badge: "", description: "Kvėpuojantis medvilninis polo su švaria apykakle ir subtilia tekstūra." },
-  { id: 13, name: "Minkštos kelnės", category: "clothing", categoryLabel: "Drabužiai", price: 79, image: "https://images.unsplash.com/photo-1602293589930-45aad59ba3ab?auto=format&fit=crop&w=900&q=88", badge: "", description: "Patogios, bet tvarkingos kelnės su elastinga juosmens juosta kasdieniam ritmui." },
-  { id: 14, name: "Lengva pūkinė striukė", category: "clothing", categoryLabel: "Drabužiai", price: 159, image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=900&q=88", badge: "Bestseller", description: "Lengva, šilta striukė su matiniu paviršiumi ir kompaktišku siluetu." }
+  { id: 1, name: "Vilnos overshirt", category: "clothing", categoryLabel: "Drabužiai", price: 89, imageId: "1617137968427-85924c800a22", badge: "Nauja", description: "Minkštas, struktūriškas vilnos mišinio sluoksnis, sukurtas dėvėti vienas arba ant marškinėlių." },
+  { id: 2, name: "Kasdieniai marškinėliai", category: "clothing", categoryLabel: "Drabužiai", price: 39, imageId: "1521572163474-6864f9cf17ab", badge: "Bestseller", description: "Sunkesnio medvilnės džersio marškinėliai su laisvu siluetu ir švaria apdaila." },
+  { id: 3, name: "Canvas 01 sportbačiai", category: "shoes", categoryLabel: "Avalynė", price: 110, imageId: "1542291026-7eec264c27ff", badge: "", description: "Lengvi drobiniai sportbačiai su tvirtu guminiu padu ir universaliu profiliu." },
+  { id: 4, name: "Odinis diržas", category: "accessories", categoryLabel: "Aksesuarai", price: 45, imageId: "1624222247344-550fb60583dc", badge: "", description: "Klasikinis natūralios odos diržas, kuris su laiku įgauna individualų charakterį." },
+  { id: 5, name: "Ribbed megztinis", category: "clothing", categoryLabel: "Drabužiai", price: 75, imageId: "1574164904299-3a102b110380", badge: "", description: "Šiltas briaunuotas megztinis su apvalia apykakle ir subtiliai laisvu kirpimu." },
+  { id: 6, name: "Suede 02 batai", category: "shoes", categoryLabel: "Avalynė", price: 135, imageId: "1608231387042-66d1773070a5", badge: "Nauja", description: "Minkštas zomšos batai kasdieniam ritmui, papildyti patogiu amortizuojančiu padu." },
+  { id: 7, name: "Tekstūrinė kepurė", category: "accessories", categoryLabel: "Aksesuarai", price: 29, imageId: "1576871337632-b9aef4c17ab9", badge: "", description: "Šilta, tekstūrinė kepurė su subtilia Northline etikete priekyje." },
+  { id: 8, name: "Kasdienis krepšys", category: "accessories", categoryLabel: "Aksesuarai", price: 98, imageId: "1544816155-12df9643f363", badge: "", description: "Talpus drobinis krepšys su odinėmis rankenomis ir vidine kišene smulkiems daiktams." },
+  { id: 9, name: "Lininiai marškiniai", category: "clothing", categoryLabel: "Drabužiai", price: 69, imageId: "1596755094514-f87e34085b2c", badge: "Nauja", description: "Lengvi lininiai marškiniai su laisvu kirpimu, tinkami tiek miestui, tiek savaitgalio kelionei." },
+  { id: 10, name: "Tiesaus kirpimo džinsai", category: "clothing", categoryLabel: "Drabužiai", price: 95, imageId: "1541099649105-f69ad21f3246", badge: "", description: "Patvaraus denimo džinsai su tiesiu siluetu ir vidutinio aukščio liemeniu." },
+  { id: 11, name: "Vilnonis švarkas", category: "clothing", categoryLabel: "Drabužiai", price: 149, imageId: "1591047139829-d91aecb6caea", badge: "Atrinkta", description: "Minimalistinis vilnos švarkas, sukurtas sluoksniuoti ir dėvėti ne vieną sezoną." },
+  { id: 12, name: "Medvilninis polo", category: "clothing", categoryLabel: "Drabužiai", price: 55, imageId: "1581655353564-df123a1eb820", badge: "", description: "Kvėpuojantis medvilninis polo su švaria apykakle ir subtilia tekstūra." },
+  { id: 13, name: "Minkštos kelnės", category: "clothing", categoryLabel: "Drabužiai", price: 79, imageId: "1624378439575-d8705ad7ae80", badge: "", description: "Patogios, bet tvarkingos kelnės su elastinga juosmens juosta kasdieniam ritmui." },
+  { id: 14, name: "Lengva pūkinė striukė", category: "clothing", categoryLabel: "Drabužiai", price: 159, imageId: "1551028719-00167b16eac5", badge: "Bestseller", description: "Lengva, šilta striukė su matiniu paviršiumi ir kompaktišku siluetu." }
 ];
 
-// Kiekvienas papildomas drabužis tiesiogiai suporuotas su konkrečia, jo tipą atitinkančia nuotrauka
 const additionalClothingData = [
-  { name: "Laisvas medvilninis džemperis", price: 65, image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=900&q=88", badge: "Nauja", desc: "Laisvo stiliaus medvilninis džemperis patogiam kasdieniam laisvalaikiui." },
-  { name: "Struktūrinė liemenė", price: 75, image: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Struktūrinė liemenė, suteikianti išskirtinumo bet kuriam derinoriui." },
-  { name: "Klasikiniai balti marškiniai", price: 59, image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=900&q=88", badge: "Nauja", desc: "Laiko patikrinti klasikiniai marškiniai iš aukštos kokybės medvilnės." },
-  { name: "Minkštas kardiganas", price: 85, image: "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Jaukus, švelnus kardiganas vėsesnėms dienoms." },
-  { name: "Plačios lininės kelnės", price: 79, image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=900&q=88", badge: "Atrinkta", desc: "Lengvos ir pralaidios orui plačios lininės kelnės." },
-  { name: "Trumpas vilnos paltas", price: 179, image: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=900&q=88", badge: "Nauja", desc: "Elegantiškas trumpesnio kirpimo vilnonis paltas." },
-  { name: "Laisvo kirpimo švarkas", price: 139, image: "https://images.unsplash.com/photo-1598808503746-f34c53b9323e?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Stilingas laisvo silueto švarkas modernesniam įvaizdžiui." },
-  { name: "Plonas golfas", price: 49, image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Švelnus prigludęs golfas, idealiai tinkantis sluoksniavimui." },
-  { name: "Medvilninė suknelė", price: 89, image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=900&q=88", badge: "Bestseller", desc: "Lengva medvilninė suknelė su subtiliomis detalėmis." },
-  { name: "Tekstūrinis sijonas", price: 69, image: "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Elegantiškas tekstūrinis sijonas kasdienai ir progoms." },
-  { name: "Kasdienis džemperis", price: 59, image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Minkštas ir patogus džemperis laisvalaikiui." },
-  { name: "Tamsus džinsinis švarkas", price: 119, image: "https://images.unsplash.com/photo-1543076447-215ad9ba6923?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Tvarkingas tamsaus denimo švarkas." },
-  { name: "Lengvas lietpaltis", price: 159, image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=88", badge: "Nauja", desc: "Vandeniui atsparus ir stilingas lietpaltis permainingiems orams." },
-  { name: "Vilnonė liemenė", price: 85, image: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Šilta vilnonė liemenė sluoksniavimui ant marškinių." },
-  { name: "Klasikinis trench paltas", price: 189, image: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=900&q=88", badge: "Bestseller", desc: "Klasikinis smėlio spalvos trench paltas su diržu." },
-  { name: "Minkštas flanelinis švarkas", price: 95, image: "https://images.unsplash.com/photo-1598808503746-f34c53b9323e?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Jaukus flanelinio audinio švarkas vėsesniam orui." },
-  { name: "Ribbed midi suknelė", price: 99, image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Prigludusi briaunota midi suknelė iš tampraus trikotažo." },
-  { name: "Drobiniai šortai", price: 49, image: "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Lengvi ir patvarūs drobiniai šortai vasaros dienoms." },
-  { name: "Laisvi marškiniai", price: 65, image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Laisvo kirpimo marškiniai patogiam kasdieniam stiliui." },
-  { name: "Minimalistinis kombinezonas", price: 129, image: "https://images.unsplash.com/photo-1550614000-4895a10e1bfd?auto=format&fit=crop&w=900&q=88", badge: "Atrinkta", desc: "Vienas rūbas – pilnas įvaizdis: švarus ir minimalistinis kombinezonas." },
-  { name: "Medvilninis kardiganas", price: 79, image: "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Lengvas medvilninis kardiganas su sagomis." },
-  { name: "Tiesus midi sijonas", price: 69, image: "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Klasikinis tiesaus kirpimo midi sijonas." },
-  { name: "Lengvas vasarinis švarkas", price: 115, image: "https://images.unsplash.com/photo-1598808503746-f34c53b9323e?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Pralaidus orui švarkas šiltesniems orams." },
-  { name: "Pūkinė liemenė", price: 99, image: "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Kompaktiška ir šilta pūkinė liemenė kasdienai." },
-  { name: "Minkšti lounge marškinėliai", price: 35, image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Ypatingai švelnūs marškinėliai namų ilsėjimuisi." },
-  { name: "Klasikinis juodas golfas", price: 55, image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Būtina garderobo dalis – klasikinis juodas golfas." },
-  { name: "Aukšto liemens kelnės", price: 85, image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Elegantiškos aukšto liemens kelnės su tiesiomis klešnėmis." },
-  { name: "Denimo maxi sijonas", price: 89, image: "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?auto=format&fit=crop&w=900&q=88", badge: "Nauja", desc: "Madingas ilgas denimo sijonas su skeltuku priekyje." },
-  { name: "Tekstūriniai marškinėliai", price: 42, image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Marškinėliai iš išreikštos tekstūros medvilnės audinio." },
-  { name: "Vilnonis megztinis", price: 95, image: "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=900&q=88", badge: "Bestseller", desc: "Grynos vilnos šiltas megztinis." },
-  { name: "Trumpa medvilninė striukė", price: 125, image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Trumpo silueto striukė pavasario/rudens sezonui." },
-  { name: "Lininė palaidinė", price: 55, image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Lengva ir gaivi lininė palaidinė." },
-  { name: "Platus džinsinis modelis", price: 99, image: "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Laisvalaikio džinsai su platėjančiu siluetu." },
-  { name: "Minkštas polo džemperis", price: 75, image: "https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Stilingas polo stiliaus megztas džemperis." },
-  { name: "Lengvas oversize džemperis", price: 69, image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Oversize modelio džemperis maksimaliam patogumui." },
-  { name: "Kreminis megztinis", price: 85, image: "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Švelnios kreminės spalvos jaukus megztinis." },
-  { name: "Minimalistinė liemenė", price: 69, image: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Griežto kirpimo minimalistinė liemenė." },
-  { name: "Pusiau ilgas vilnos paltas", price: 199, image: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=900&q=88", badge: "Atrinkta", desc: "Klasikinis pusiau ilgas vilnonis paltas." },
-  { name: "Kasdienė marškinėlių suknelė", price: 72, image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Paprastos konstrukcijos laisvalaikio suknelė." },
-  { name: "Struktūrinės kelnės", price: 89, image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Elegantiškos formos ir tekstūros kelnės." },
-  { name: "Medvilninis švarkelis", price: 110, image: "https://images.unsplash.com/photo-1598808503746-f34c53b9323e?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Lengvas kasdienis švarkelis iš medvilnės." },
-  { name: "Laisvi cargo džinsai", price: 99, image: "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=900&q=88", badge: "Nauja", desc: "Patogūs cargo stiliaus džinsai su kišenėmis." },
-  { name: "Minkštas hoodie", price: 75, image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Džemperis su gobtuvu jaukiam laisvalaikiui." },
-  { name: "Lininis kostiumas", price: 185, image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Subalansuotas lininis kostiumas vasaros dienoms." },
-  { name: "Klasikinė palaidinė", price: 55, image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Elegantiška ir universali palaidinė." },
-  { name: "Tekstūrinis bomberis", price: 135, image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Šiuolaikiško kirpimo tekstūrinis bomberis." },
-  { name: "Tamsus vilnos džemperis", price: 89, image: "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Šiltas tamsios spalvos vilnonis džemperis." },
-  { name: "Lengvas sluoksniavimo topas", price: 39, image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Minimalistinis viršutinis rūbas sluoksniavimui." },
-  { name: "Universalus megztinis", price: 79, image: "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=900&q=88", badge: "", desc: "Kasdieniam nešiojimui pritaikytas megztinis." },
-  { name: "Klasikinis denim švarkas", price: 109, image: "https://images.unsplash.com/photo-1543076447-215ad9ba6923?auto=format&fit=crop&w=900&q=88", badge: "Bestseller", desc: "Niekada neišeinantis iš mados klasikinis džinsinis švarkas." }
+  { name: "Laisvas medvilninis džemperis", price: 65, imageId: "1556821840-3a63f95609a7", badge: "Nauja", desc: "Laisvo stiliaus medvilninis džemperis patogiam kasdieniam laisvalaikiui." },
+  { name: "Struktūrinė liemenė", price: 75, imageId: "1616166324213-94c6f9661f4c", badge: "", desc: "Struktūrinė liemenė, suteikianti išskirtinumo bet kuriam deriniui." },
+  { name: "Klasikiniai balti marškiniai", price: 59, imageId: "1621072156002-e2fcc103e889", badge: "Nauja", desc: "Laiko patikrinti klasikiniai marškiniai iš aukštos kokybės medvilnės." },
+  { name: "Minkštas kardiganas", price: 85, imageId: "1516762689617-e1cffcef479d", badge: "", desc: "Jaukus, švelnus kardiganas vėsesnėms dienoms." },
+  { name: "Plačios lininės kelnės", price: 79, imageId: "1509551388413-e18d0ac5d495", badge: "Atrinkta", desc: "Lengvos ir pralaidios orui plačios lininės kelnės." },
+  { name: "Trumpas vilnos paltas", price: 179, imageId: "1544923246-77307dd654cb", badge: "Nauja", desc: "Elegantiškas trumpesnio kirpimo vilnonis paltas." },
+  { name: "Laisvo kirpimo švarkas", price: 139, imageId: "1548883354-7622d03aca27", badge: "", desc: "Stilingas laisvo silueto švarkas modernesniam įvaizdžiui." },
+  { name: "Plonas golfas", price: 49, imageId: "1614975058789-41316d0e2e9c", badge: "", desc: "Švelnus prigludęs golfas, idealiai tinkantis sluoksniavimui." },
+  { name: "Medvilninė suknelė", price: 89, imageId: "1595777457583-95e059d581b8", badge: "Bestseller", desc: "Lengva medvilninė suknelė su subtiliomis detalėmis." },
+  { name: "Tekstūrinis sijonas", price: 69, imageId: "1583496661160-fb5886a0aaaa", badge: "", desc: "Elegantiškas tekstūrinis sijonas kasdienai ir progoms." },
+  { name: "Kasdienis džemperis", price: 59, imageId: "1620799140408-edc6dcb6d633", badge: "", desc: "Minkštas ir patogus džemperis laisvalaikiui." },
+  { name: "Tamsus denimo švarkas", price: 119, imageId: "1611312449412-6cefac5dc3e4", badge: "", desc: "Tvarkingas tamsaus denimo švarkas." },
+  { name: "Lengvas lietpaltis", price: 159, imageId: "1542393545-10f5cde2c810", badge: "Nauja", desc: "Vandeniui atsparus ir stilingas lietpaltis permainingiems orams." },
+  { name: "Vilnonė liemenė", price: 85, imageId: "1626438012674-a690bf70d898", badge: "", desc: "Šilta vilnonė liemenė sluoksniavimui ant marškinių." },
+  { name: "Klasikinis trench paltas", price: 189, imageId: "1525450824789-227aeefac513", badge: "Bestseller", desc: "Klasikinis smėlio spalvos trench paltas su diržu." },
+  { name: "Minkštas flanelinis švarkas", price: 95, imageId: "1516257984-b1b4d707412e", badge: "", desc: "Jaukus flanelinio audinio švarkas vėsesniam orui." },
+  { name: "Ribbed midi suknelė", price: 99, imageId: "1515372039744-b8f02a3ae446", badge: "", desc: "Prigludusi briaunota midi suknelė iš tampraus trikotažo." },
+  { name: "Drobiniai šortai", price: 49, imageId: "1591195853828-11db59a44f6b", badge: "", desc: "Lengvi ir patvarūs drobiniai šortai vasaros dienoms." },
+  { name: "Laisvi marškiniai", price: 65, imageId: "1512436991641-6745cdb1723f", badge: "", desc: "Laisvo kirpimo marškiniai patogiam kasdieniam stiliui." },
+  { name: "Minimalistinis kombinezonas", price: 129, imageId: "1550614000-4895a10e1bfd", badge: "Atrinkta", desc: "Vienas rūbas – pilnas įvaizdis: švarus ir minimalistinis kombinezonas." },
+  { name: "Medvilninis kardiganas", price: 79, imageId: "1620799140188-3b2a02fd9a55", badge: "", desc: "Lengvas medvilninis kardiganas su sagomis." },
+  { name: "Tiesus midi sijonas", price: 69, imageId: "1544526226-d4568090ffb8", badge: "", desc: "Klasikinis tiesaus kirpimo midi sijonas." },
+  { name: "Lengvas vasarinis švarkas", price: 115, imageId: "1604644401890-0bd678c83780", badge: "", desc: "Pralaidus orui švarkas šiltesniems orams." },
+  { name: "Pūkinė liemenė", price: 99, imageId: "1601924994987-69e26d50dc26", badge: "", desc: "Kompaktiška ir šilta pūkinė liemenė kasdienai." },
+  { name: "Minkšti lounge marškinėliai", price: 35, imageId: "1503342217505-b0a15ec3261c", badge: "", desc: "Ypatingai švelnūs marškinėliai namų ilsėjimuisi." },
+  { name: "Klasikinis juodas golfas", price: 55, imageId: "1508445861827-7711f397113a", badge: "", desc: "Būtina garderobo dalis – klasikinis juodas golfas." },
+  { name: "Aukšto liemens kelnės", price: 85, imageId: "1584308666744-24d5c474f2ae", badge: "", desc: "Elegantiškos aukšto liemens kelnės su tiesiomis klešnėmis." },
+  { name: "Denimo maxi sijonas", price: 89, imageId: "1605763240000-7e93b172d754", badge: "Nauja", desc: "Madingas ilgas denimo sijonas su skeltuku priekyje." },
+  { name: "Tekstūriniai marškinėliai", price: 42, imageId: "1484515991647-c5760fcecfc7", badge: "", desc: "Marškinėliai iš išreikštos tekstūros medvilnės audinio." },
+  { name: "Vilnonis megztinis", price: 95, imageId: "1611911813495-2630a91e56b8", badge: "Bestseller", desc: "Grynos vilnos šiltas megztinis." },
+  { name: "Trumpa medvilninė striukė", price: 125, imageId: "1618333256087-0b5c16386fae", badge: "", desc: "Trumpo silueto striukė pavasario/rudens sezonui." },
+  { name: "Lininė palaidinė", price: 55, imageId: "1541101767792-f9b2b1c4f127", badge: "", desc: "Lengva ir gaivi lininė palaidinė." },
+  { name: "Platus džinsinis modelis", price: 99, imageId: "1582562124811-c09040d0a901", badge: "", desc: "Laisvalaikio džinsai su platėjančiu siluetu." },
+  { name: "Minkštas polo džemperis", price: 75, imageId: "1618517047922-d790407df742", badge: "", desc: "Stilingas polo stiliaus megztas džemperis." },
+  { name: "Lengvas oversize džemperis", price: 69, imageId: "1620799139834-6b8f844fbe61", badge: "", desc: "Oversize modelio džemperis maksimaliam patogumui." },
+  { name: "Kreminis megztinis", price: 85, imageId: "1607730140456-c6e4c278077c", badge: "", desc: "Švelnios kreminės spalvos jaukus megztinis." },
+  { name: "Minimalistinė liemenė", price: 69, imageId: "1551232864-3f0890e580d9", badge: "", desc: "Griežto kirpimo minimalistinė liemenė." },
+  { name: "Pusiau ilgas vilnos paltas", price: 199, imageId: "1539571696357-5a69c17a67c6", badge: "Atrinkta", desc: "Klasikinis pusiau ilgas vilnonis paltas." },
+  { name: "Kasdienė marškinėlių suknelė", price: 72, imageId: "1572804013309-59a88b7e92f1", badge: "", desc: "Paprastos konstrukcijos laisvalaikio suknelė." },
+  { name: "Struktūrinės kelnės", price: 89, imageId: "1517445312882-bc9910d016b7", badge: "", desc: "Elegantiškos formos ir tekstūros kelnės." },
+  { name: "Medvilninis švarkelis", price: 110, imageId: "1507679799987-c73779587ccf", badge: "", desc: "Lengvas kasdienis švarkelis iš medvilnės." },
+  { name: "Laisvi cargo džinsai", price: 99, imageId: "1617113913973-418370733843", badge: "Nauja", desc: "Patogūs cargo stiliaus džinsai su kišenėmis." },
+  { name: "Minkštas hoodie", price: 75, imageId: "1543163521-1bf539c55dd2", badge: "", desc: "Džemperis su gobtuvu jaukiam laisvalaikiui." },
+  { name: "Lininis kostiumas", price: 185, imageId: "1505022610485-0249ba5b3675", badge: "", desc: "Subalansuotas lininis kostiumas vasaros dienoms." },
+  { name: "Klasikinė palaidinė", price: 55, imageId: "1564584217132-2271feaeb3c5", badge: "", desc: "Elegantiška ir universali palaidinė." },
+  { name: "Tekstūrinis bomberis", price: 135, imageId: "1544022613-e87ca75a784a", badge: "", desc: "Šiuolaikiško kirpimo tekstūrinis bomberis." },
+  { name: "Tamsus vilnos džemperis", price: 89, imageId: "1614975058789-41316d0e2e9c", badge: "", desc: "Šiltas tamsios spalvos vilnonis džemperis." },
+  { name: "Lengvas sluoksniavimo topas", price: 39, imageId: "1529139574466-a303027c1d8b", badge: "", desc: "Minimalistinis viršutinis rūbas sluoksniavimui." },
+  { name: "Universalus megztinis", price: 79, imageId: "1517245386807-bb43f82c33c4", badge: "", desc: "Kasdieniam nešiojimui pritaikytas megztinis." },
+  { name: "Klasikinis denim švarkas", price: 109, imageId: "1576995853123-5a10305d93c0", badge: "Bestseller", desc: "Niekada neišeinantis iš mados klasikinis džinsinis švarkas." }
 ];
 
 const additionalClothing = additionalClothingData.map((item, index) => ({
@@ -75,14 +74,28 @@ const additionalClothing = additionalClothingData.map((item, index) => ({
   category: "clothing",
   categoryLabel: "Drabužiai",
   price: item.price,
-  image: item.image,
+  image: `https://images.unsplash.com/photo-${item.imageId}?auto=format&fit=crop&w=600&q=80`,
   badge: item.badge,
   description: item.desc
 }));
 
-const products = [...baseProducts, ...additionalClothing];
+const baseProductsWithImages = baseProducts.map(product => ({
+  ...product,
+  image: `https://images.unsplash.com/photo-${product.imageId}?auto=format&fit=crop&w=600&q=80`
+}));
 
-const state = { category: "all", search: "", sort: "featured", cart: loadCart(), favorites: loadFavorites(), wishlistOnly: false, visibleLimit: 16 };
+const products = [...baseProductsWithImages, ...additionalClothing];
+
+const state = {
+  category: "all",
+  search: "",
+  sort: "featured",
+  cart: loadCart(),
+  favorites: loadFavorites(),
+  wishlistOnly: false,
+  visibleLimit: 16
+};
+
 const productGrid = document.querySelector("#product-grid");
 const emptyState = document.querySelector("#empty-state");
 const resultsLabel = document.querySelector("#results-label");
@@ -107,7 +120,9 @@ function formatPrice(value) {
 function loadCart() {
   try {
     const savedCart = JSON.parse(localStorage.getItem("northline-cart"));
-    return Array.isArray(savedCart) ? savedCart.filter((item) => item && Number.isFinite(item.id) && item.quantity > 0).map((item) => ({ ...item, size: item.size || "S" })) : [];
+    return Array.isArray(savedCart) 
+      ? savedCart.filter((item) => item && Number.isFinite(item.id) && item.quantity > 0).map((item) => ({ ...item, size: item.size || "S" })) 
+      : [];
   } catch (error) {
     return [];
   }
@@ -134,16 +149,6 @@ function getProduct(productId) {
   return products.find((product) => product.id === productId);
 }
 
-function handleImageError(event) {
-  const image = event.currentTarget;
-  if (image.dataset.fallbackApplied) return;
-  image.dataset.fallbackApplied = "true";
-  image.classList.add("image-fallback");
-  const label = image.alt.replace(/\s*\(.*\)$/, "").slice(0, 32);
-  image.src = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 960"><rect width="800" height="960" fill="#eeece6"/><path d="M0 720 190 570l150 115 130-170 330 260V960H0Z" fill="#dedbd4"/><text x="400" y="460" fill="#77736b" font-family="Georgia,serif" font-size="34" text-anchor="middle">Northline</text><text x="400" y="515" fill="#77736b" font-family="Arial,sans-serif" font-size="16" text-anchor="middle">${label}</text></svg>`)}`;
-  image.alt = label;
-}
-
 function getVisibleProducts() {
   const query = state.search.trim().toLocaleLowerCase("lt-LT");
   const visible = products.filter((product) => {
@@ -152,7 +157,7 @@ function getVisibleProducts() {
     const matchesWishlist = !state.wishlistOnly || state.favorites.includes(product.id);
     return matchesCategory && matchesSearch && matchesWishlist;
   });
-
+  
   return visible.sort((first, second) => {
     if (state.sort === "price-low") return first.price - second.price;
     if (state.sort === "price-high") return second.price - first.price;
@@ -164,14 +169,16 @@ function getVisibleProducts() {
 function renderProducts() {
   const allVisibleProducts = getVisibleProducts();
   const visibleProducts = allVisibleProducts.slice(0, state.visibleLimit);
+  
   resultsLabel.textContent = allVisibleProducts.length > visibleProducts.length
     ? `Rodoma ${visibleProducts.length} iš ${allVisibleProducts.length} prekių`
     : `Rodoma ${visibleProducts.length} ${visibleProducts.length === 1 ? "prekė" : "prekių"}`;
+    
   productGrid.innerHTML = visibleProducts.map((product, index) => `
     <article class="product-card" style="animation-delay: ${Math.min(index * 20, 240)}ms">
       <div class="product-image-wrap">
         <button class="product-card-image-button" type="button" data-product-id="${product.id}" aria-label="Peržiūrėti ${product.name}">
-          <img class="product-image" src="${product.image}" alt="${product.name}" loading="lazy" onerror="handleImageError(event)">
+          <img class="product-image" src="${product.image}" alt="${product.name}" loading="lazy">
         </button>
         ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ""}
         <button class="favorite-button ${state.favorites.includes(product.id) ? "is-favorite" : ""}" type="button" data-favorite-id="${product.id}" aria-label="${state.favorites.includes(product.id) ? "Pašalinti iš mėgstamiausių" : "Pridėti į mėgstamiausius"}" aria-pressed="${state.favorites.includes(product.id)}">♡</button>
@@ -186,15 +193,19 @@ function renderProducts() {
       </div>
     </article>
   `).join("");
-
+  
   emptyState.hidden = allVisibleProducts.length > 0;
   productGrid.hidden = allVisibleProducts.length === 0;
+  
   const loadMoreButton = document.querySelector("#load-more");
   loadMoreButton.hidden = visibleProducts.length >= allVisibleProducts.length || allVisibleProducts.length === 0;
+  
   emptyState.querySelector("h3").textContent = state.wishlistOnly ? "Dar neišsaugojote šios kategorijos prekių" : "Pabandykite kitą paiešką";
   emptyState.querySelector("#clear-search").textContent = state.wishlistOnly ? "Rodyti visas prekes" : "Išvalyti paiešką";
+  
   document.querySelector("#wishlist-filter").setAttribute("aria-pressed", state.wishlistOnly);
   document.querySelector("#wishlist-filter").classList.toggle("is-active", state.wishlistOnly);
+  
   renderWishlist();
 }
 
@@ -205,22 +216,26 @@ function getCartCount() {
 function renderCart() {
   const count = getCartCount();
   const subtotal = state.cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  
   document.querySelector("#cart-count").textContent = count;
   document.querySelector("#cart-title-count").textContent = `(${count})`;
   document.querySelector("#cart-subtotal").textContent = formatPrice(subtotal);
+  
   const shippingProgress = document.querySelector("#shipping-progress");
   const shippingNote = document.querySelector("#shipping-note");
   const shippingThreshold = 100;
   const progress = Math.min((subtotal / shippingThreshold) * 100, 100);
   const remaining = shippingThreshold - subtotal;
+  
   shippingProgress.innerHTML = `<span style="width: ${progress}%"></span>`;
   shippingNote.textContent = remaining > 0 ? `Iki nemokamo pristatymo liko ${formatPrice(remaining)}` : "Jūsų užsakymui taikomas nemokamas pristatymas";
+  
   cartEmpty.hidden = state.cart.length > 0;
   cartItems.hidden = state.cart.length === 0;
-
+  
   cartItems.innerHTML = state.cart.map((item) => `
     <div class="cart-item">
-      <img class="cart-item-image" src="${item.image}" alt="${item.name}" onerror="handleImageError(event)">
+      <img class="cart-item-image" src="${item.image}" alt="${item.name}">
       <div>
         <p class="cart-item-name">${item.name}</p>
         <p class="cart-item-price">${formatPrice(item.price)} · Dydis ${item.size || "S"}</p>
@@ -237,14 +252,17 @@ function renderCart() {
 
 function renderWishlist() {
   const savedProducts = state.favorites.map(getProduct).filter(Boolean);
+  
   document.querySelector("#wishlist-count").textContent = savedProducts.length;
   document.querySelector("#wishlist-title-count").textContent = `(${savedProducts.length})`;
+  
   wishlistEmpty.hidden = savedProducts.length > 0;
   wishlistItems.hidden = savedProducts.length === 0;
+  
   wishlistItems.innerHTML = savedProducts.map((product) => `
     <div class="wishlist-item">
       <button class="wishlist-product" type="button" data-wishlist-product-id="${product.id}">
-        <img src="${product.image}" alt="${product.name}" onerror="handleImageError(event)">
+        <img src="${product.image}" alt="${product.name}">
         <span><strong>${product.name}</strong><small>${formatPrice(product.price)}</small></span>
       </button>
       <button class="remove-item" type="button" data-wishlist-remove-id="${product.id}" aria-label="Pašalinti ${product.name} iš mėgstamiausių">×</button>
@@ -255,9 +273,11 @@ function renderWishlist() {
 function addToCart(productId, size = "S") {
   const product = products.find((item) => item.id === productId);
   if (!product) return;
+  
   const existingItem = state.cart.find((item) => item.id === productId && (item.size || "S") === size);
   if (existingItem) existingItem.quantity += 1;
   else state.cart.push({ ...product, size, quantity: 1 });
+  
   saveCart();
   renderCart();
   showToast(`${product.name} pridėta į krepšelį`);
@@ -266,8 +286,10 @@ function addToCart(productId, size = "S") {
 function updateQuantity(productId, change) {
   const item = state.cart.find((cartItem) => cartItem.id === productId);
   if (!item) return;
+  
   item.quantity += change;
   if (item.quantity <= 0) state.cart = state.cart.filter((cartItem) => cartItem.id !== productId);
+  
   saveCart();
   renderCart();
 }
@@ -297,20 +319,38 @@ function closeCart() {
 function openProductModal(productId) {
   const product = getProduct(productId);
   if (!product) return;
+  
   modalContent.innerHTML = `
-    <img class="modal-image" src="${product.image}" alt="${product.name}" onerror="handleImageError(event)">
-    <div class="modal-info">
-      <p class="eyebrow">${product.categoryLabel}</p>
-      <h2 id="modal-title">${product.name}</h2>
-      <p class="modal-price">${formatPrice(product.price)}</p>
-      <p class="modal-description">${product.description}</p>
-      <div class="modal-options">
-        <label>Dydis<select id="modal-size"><option>XS</option><option selected>S</option><option>M</option><option>L</option><option>XL</option></select></label>
-        <label>Kiekis<div class="modal-quantity"><button type="button" data-modal-quantity="-1" aria-label="Sumažinti kiekį">−</button><output id="modal-quantity-value">1</output><button type="button" data-modal-quantity="1" aria-label="Padidinti kiekį">+</button></div></label>
+    <div class="modal-product-layout">
+      <img src="${product.image}" alt="${product.name}" class="modal-image">
+      <div class="modal-details">
+        <span class="product-category">${product.categoryLabel}</span>
+        <h2>${product.name}</h2>
+        <p class="modal-price">${formatPrice(product.price)}</p>
+        <p class="modal-description">${product.description}</p>
+        <div class="modal-options">
+          <label for="modal-size">Dydis:</label>
+          <select id="modal-size" class="modal-select">
+            <option value="XS">XS</option>
+            <option value="S" selected>S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+          </select>
+        </div>
+        <div class="modal-quantity-row">
+          <span>Kiekis:</span>
+          <div class="quantity-controls">
+            <button type="button" data-modal-quantity="-1">−</button>
+            <span id="modal-quantity-value">1</span>
+            <button type="button" data-modal-quantity="1">+</button>
+          </div>
+        </div>
+        <button class="button button-primary" type="button" data-modal-add-id="${product.id}">Pridėti į krepšelį</button>
       </div>
-      <button class="button button-primary" type="button" data-modal-add-id="${product.id}">Pridėti į krepšelį <span aria-hidden="true">↗</span></button>
     </div>
   `;
+  
   productModal.showModal();
   document.body.classList.add("is-locked");
 }
@@ -374,6 +414,7 @@ sortSelect.addEventListener("change", (event) => {
 });
 
 document.querySelector("#search-form").addEventListener("submit", (event) => event.preventDefault());
+
 productGrid.addEventListener("click", (event) => {
   const addButton = event.target.closest("[data-add-id]");
   const cardButton = event.target.closest("[data-product-id]");
@@ -420,10 +461,12 @@ document.querySelector("#continue-shopping").addEventListener("click", closeCart
 document.querySelector("#wishlist-toggle").addEventListener("click", openWishlist);
 document.querySelector("#wishlist-close").addEventListener("click", closeWishlist);
 document.querySelector("#wishlist-continue").addEventListener("click", closeWishlist);
+
 overlay.addEventListener("click", () => {
   closeCart();
   closeWishlist();
 });
+
 document.querySelector("#clear-search").addEventListener("click", () => {
   state.search = "";
   searchInput.value = "";
@@ -431,10 +474,12 @@ document.querySelector("#clear-search").addEventListener("click", () => {
   state.visibleLimit = 16;
   renderProducts();
 });
+
 document.querySelector("#load-more").addEventListener("click", () => {
   state.visibleLimit += 16;
   renderProducts();
 });
+
 document.querySelector("#checkout-button").addEventListener("click", () => {
   if (!state.cart.length) {
     showToast("Krepšelis tuščias");
@@ -448,25 +493,30 @@ document.querySelector("#modal-close").addEventListener("click", () => productMo
 productModal.addEventListener("click", (event) => {
   if (event.target === productModal) productModal.close();
 });
+
 productModal.addEventListener("click", (event) => {
   const quantityButton = event.target.closest("[data-modal-quantity]");
   const addButton = event.target.closest("[data-modal-add-id]");
   if (quantityButton) {
     const quantityOutput = document.querySelector("#modal-quantity-value");
-    quantityOutput.value = Math.max(1, Number(quantityOutput.value || quantityOutput.textContent) + Number(quantityButton.dataset.modalQuantity));
-    quantityOutput.textContent = quantityOutput.value;
+    let currentVal = Number(quantityOutput.value || quantityOutput.textContent);
+    let newVal = Math.max(1, currentVal + Number(quantityButton.dataset.modalQuantity));
+    quantityOutput.textContent = newVal;
+    quantityOutput.value = newVal;
   }
   if (addButton) {
-    const quantity = Number(document.querySelector("#modal-quantity-value").value || 1);
+    const quantity = Number(document.querySelector("#modal-quantity-value").textContent || 1);
     const size = document.querySelector("#modal-size").value;
-    for (let index = 0; index < quantity; index += 1) addToCart(Number(addButton.dataset.modalAddId), size);
+    for (let index = 0; index < quantity; index += 1) addToCart(Number(addButton.dataset.addId), size);
     productModal.close();
     openCart();
   }
 });
+
 productModal.addEventListener("close", () => document.body.classList.remove("is-locked"));
 document.querySelector("#checkout-close").addEventListener("click", () => checkoutModal.close());
 checkoutModal.addEventListener("close", () => document.body.classList.remove("is-locked"));
+
 document.querySelector("#checkout-form").addEventListener("submit", (event) => {
   event.preventDefault();
   const orderNumber = `NL-${Math.floor(10000 + Math.random() * 90000)}`;
@@ -477,11 +527,13 @@ document.querySelector("#checkout-form").addEventListener("submit", (event) => {
   event.currentTarget.reset();
   showToast(`Užsakymas ${orderNumber} patvirtintas`);
 });
+
 document.querySelector("#contact-form").addEventListener("submit", (event) => {
   event.preventDefault();
   event.currentTarget.reset();
   showToast("Ačiū, jūsų žinutė išsiųsta");
 });
+
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && cartPanel.classList.contains("is-open")) closeCart();
   if (event.key === "Escape" && wishlistPanel.classList.contains("is-open")) closeWishlist();
