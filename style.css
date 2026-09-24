@@ -160,10 +160,11 @@ h1 em { color: var(--muted); font-style: italic; }
 .product-modal { position: fixed; z-index: 30; width: min(860px, calc(100% - 32px)); max-height: calc(100dvh - 32px); padding: 0; border: 0; background: var(--surface); box-shadow: var(--shadow); }
 .product-modal::backdrop { background: rgba(30, 30, 28, 0.45); }
 .modal-close { position: absolute; top: 18px; right: 18px; z-index: 1; background: rgba(255, 255, 255, 0.72); }
-.modal-content { display: grid; grid-template-columns: 1fr 1fr; max-height: calc(100dvh - 32px); overflow: auto; }
-.modal-image { width: 100%; height: 100%; min-height: 560px; padding: 18px; object-fit: contain; object-position: center; background: var(--soft); }
-.modal-info { display: flex; flex-direction: column; justify-content: center; padding: 60px 52px; }
-.modal-info h2 { margin-bottom: 12px; font-family: "Playfair Display", Georgia, serif; font-size: 42px; letter-spacing: -0.05em; line-height: 1; }
+.modal-content { max-height: calc(100dvh - 32px); overflow: auto; }
+.modal-product-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.modal-image { width: 100%; height: min(72vh, 620px); min-height: 0; padding: 18px; object-fit: contain; object-position: center; background: var(--soft); }
+.modal-details { display: flex; min-width: 0; flex-direction: column; justify-content: center; padding: 60px 52px; }
+.modal-details h2 { margin-bottom: 12px; font-family: "Playfair Display", Georgia, serif; font-size: 42px; letter-spacing: -0.05em; line-height: 1; }
 .modal-price { margin-bottom: 25px; font-size: 17px; }
 .modal-description { margin-bottom: 30px; color: var(--muted); font-size: 13px; line-height: 1.7; }
 .modal-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
@@ -226,10 +227,10 @@ h1 em { color: var(--muted); font-style: italic; }
   .product-price { margin-top: 6px; }
   .quick-add { opacity: 1; transform: none; width: 34px; height: 34px; font-size: 20px; }
   .cart-panel { padding: 25px 18px; }
-  .modal-content { display: block; }
-  .modal-image { min-height: 330px; max-height: 52vh; }
-  .modal-info { padding: 35px 25px 30px; }
-  .modal-info h2 { font-size: 34px; }
+  .modal-product-layout { display: block; }
+  .modal-image { height: min(52vh, 390px); }
+  .modal-details { padding: 35px 25px 30px; }
+  .modal-details h2 { font-size: 34px; }
   .checkout-content { display: block; padding: 45px 24px 28px; }
   .checkout-heading h2 { font-size: 38px; }
   .checkout-heading > p:last-child { margin-bottom: 28px; }
