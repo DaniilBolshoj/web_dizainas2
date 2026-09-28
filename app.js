@@ -1,5 +1,4 @@
-// IRASYKITE SAVO UNSPLASH ACCESS KEY CIA:
-const UNSPLASH_ACCESS_KEY = "SHAaqvwv-yGoJ46yIIsLI_lD7gh2I71X7d_dyoXEruo";
+import { loadCart, loadFavorites, saveCart, saveFavorites } from "./storage.js";
 
 const baseProducts = [
   { id: 1, name: "Vilnos overshirt", query: "wool overshirt jacket", category: "clothing", categoryLabel: "Drabužiai", price: 89, badge: "Nauja", description: "Minkštas, struktūriškas vilnos mišinio sluoksnis, sukurtas dėvėti vienas arba ant marškinėlių." },
@@ -92,47 +91,20 @@ const baseProductsWithImages = baseProducts.map(product => ({
 
 const products = [...baseProductsWithImages, ...additionalClothing];
 
-// FUNKCIJA, KURI AUTOMATIŠKAI SURANDA NUOTRAUKĄ IŠ UNSPLASH API
-async function fetchUnsplashImage(query) {
-  if (!UNSPLASH_ACCESS_KEY || UNSPLASH_ACCESS_KEY === "JŪSŲ_UNSPLASH_ACCESS_KEY") {
-    return null;
-  }
-  try {
-    const response = await fetch(`https://api.unsplash.com/search/photos?page=1&query=${encodeURIComponent(query)}&client_id=${UNSPLASH_ACCESS_KEY}&per_page=1`);
-    const data = await response.json();
-    if (data.results && data.results.length > 0) {
-      return data.results[0].urls.small;
-    }
-  } catch (error) {
-    console.error("Klaida gaunant nuotrauką iš Unsplash:", error);
-  }
-  return null;
-}
-
-// AUTOMATIŠKAI ATNAUJINAME VISŲ PREKIŲ NUOTRAUKAS
-async function loadDynamicProductImages() {
-  if (!UNSPLASH_ACCESS_KEY || UNSPLASH_ACCESS_KEY === "JŪSŲ_UNSPLASH_ACCESS_KEY") return;
-
-  for (let product of products) {
-    const imageUrl = await fetchUnsplashImage(product.query || product.name);
-    if (imageUrl) {
-      product.image = imageUrl;
-    }
-  }
-  renderProducts();
-  renderCart();
-  renderWishlist();
-}
-
+const urlParams = new URLSearchParams(window.location.search);
 const state = {
-  category: "all",
-  search: "",
-  sort: "featured",
+  category: ["all", "clothing", "shoes", "accessories"].includes(urlParams.get("category")) ? urlParams.get("category") : "all",
+  search: urlParams.get("q") || "",
+  sort: ["featured", "price-low", "price-high", "name", "new", "bestseller"].includes(urlParams.get("sort")) ? urlParams.get("sort") : "featured",
+  minPrice: Math.max(0, Math.min(200, Number(urlParams.get("min")) || 0)),
+  maxPrice: Math.max(0, Math.min(200, urlParams.has("max") ? Number(urlParams.get("max")) : 200)),
   cart: loadCart(),
   favorites: loadFavorites(),
-  wishlistOnly: false,
+  wishlistOnly: urlParams.get("favorites") === "1",
+  openProductId: Number(urlParams.get("product")) || null,
   visibleLimit: 16
 };
+if (state.minPrice > state.maxPrice) state.minPrice = state.maxPrice;
 
 const productGrid = document.querySelector("#product-grid");
 const emptyState = document.querySelector("#empty-state");
@@ -150,58 +122,74 @@ const wishlistItems = document.querySelector("#wishlist-items");
 const wishlistEmpty = document.querySelector("#wishlist-empty");
 const checkoutModal = document.querySelector("#checkout-modal");
 let toastTimer;
+let searchTimer;
+const toastQueue = [];
 
 function formatPrice(value) {
   return new Intl.NumberFormat("lt-LT", { style: "currency", currency: "EUR" }).format(value);
-}
-
-function loadCart() {
-  try {
-    const savedCart = JSON.parse(localStorage.getItem("northline-cart"));
-    return Array.isArray(savedCart) 
-      ? savedCart.filter((item) => item && Number.isFinite(item.id) && item.quantity > 0).map((item) => ({ ...item, size: item.size || "S" })) 
-      : [];
-  } catch (error) {
-    return [];
-  }
-}
-
-function loadFavorites() {
-  try {
-    const savedFavorites = JSON.parse(localStorage.getItem("northline-favorites"));
-    return Array.isArray(savedFavorites) ? savedFavorites.map(Number).filter(Number.isInteger) : [];
-  } catch (error) {
-    return [];
-  }
-}
-
-function saveCart() {
-  localStorage.setItem("northline-cart", JSON.stringify(state.cart));
-}
-
-function saveFavorites() {
-  localStorage.setItem("northline-favorites", JSON.stringify(state.favorites));
 }
 
 function getProduct(productId) {
   return products.find((product) => product.id === productId);
 }
 
+function normalizeText(value) {
+  return String(value ?? "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase("lt-LT")
+    .trim();
+}
+
 function getVisibleProducts() {
-  const query = state.search.trim().toLocaleLowerCase("lt-LT");
+  const query = normalizeText(state.search);
   const visible = products.filter((product) => {
     const matchesCategory = state.category === "all" || product.category === state.category;
-    const matchesSearch = !query || `${product.name} ${product.categoryLabel}`.toLocaleLowerCase("lt-LT").includes(query);
+    const searchableText = normalizeText(`${product.name} ${product.categoryLabel} ${product.description}`);
+    const matchesSearch = !query || searchableText.includes(query);
     const matchesWishlist = !state.wishlistOnly || state.favorites.includes(product.id);
-    return matchesCategory && matchesSearch && matchesWishlist;
+    const matchesPrice = product.price >= state.minPrice && product.price <= state.maxPrice;
+    const matchesBadge = state.sort === "new" ? product.badge === "Nauja" : state.sort === "bestseller" ? product.badge === "Bestseller" : true;
+    return matchesCategory && matchesSearch && matchesWishlist && matchesPrice && matchesBadge;
   });
-  
+
   return visible.sort((first, second) => {
     if (state.sort === "price-low") return first.price - second.price;
     if (state.sort === "price-high") return second.price - first.price;
     if (state.sort === "name") return first.name.localeCompare(second.name, "lt");
     return first.id - second.id;
   });
+}
+
+function applySearch(value) {
+  state.search = String(value ?? "").trim();
+  state.visibleLimit = 16;
+  syncUrl();
+  renderProducts();
+}
+
+function syncUrl(method = "pushState") {
+  const url = new URL(window.location.href);
+  ["q", "category", "sort", "min", "max", "favorites", "product"].forEach((key) => url.searchParams.delete(key));
+  if (state.search) url.searchParams.set("q", state.search);
+  if (state.category !== "all") url.searchParams.set("category", state.category);
+  if (state.sort !== "featured") url.searchParams.set("sort", state.sort);
+  if (state.minPrice > 0) url.searchParams.set("min", String(state.minPrice));
+  if (state.maxPrice < 200) url.searchParams.set("max", String(state.maxPrice));
+  if (state.wishlistOnly) url.searchParams.set("favorites", "1");
+  if (state.openProductId) url.searchParams.set("product", String(state.openProductId));
+  window.history[method]({}, "", url);
+}
+
+function updatePriceControls() {
+  const minInput = document.querySelector("#min-price");
+  const maxInput = document.querySelector("#max-price");
+  minInput.value = String(state.minPrice);
+  maxInput.value = String(state.maxPrice);
+  minInput.max = String(state.maxPrice);
+  maxInput.min = String(state.minPrice);
+  document.querySelector("#min-price-label").textContent = `Nuo ${state.minPrice} €`;
+  document.querySelector("#max-price-label").textContent = `Iki ${state.maxPrice} €`;
 }
 
 function renderProducts() {
@@ -214,7 +202,7 @@ function renderProducts() {
     
   productGrid.innerHTML = visibleProducts.map((product, index) => `
     <article class="product-card" style="animation-delay: ${Math.min(index * 20, 240)}ms">
-      <div class="product-image-wrap">
+      <div class="product-image-wrap is-loading">
         <button class="product-card-image-button" type="button" data-product-id="${product.id}" aria-label="Peržiūrėti ${product.name}">
           <img class="product-image" src="${product.image}" alt="${product.name}" loading="lazy">
         </button>
@@ -226,11 +214,19 @@ function renderProducts() {
         <div>
           <p class="product-category">${product.categoryLabel}</p>
           <h3 class="product-name">${product.name}</h3>
+          <label class="card-size-label"><span class="sr-only">${product.name} dydis</span><select class="card-size-select" aria-label="${product.name} dydis" data-size-select><option>XS</option><option selected>S</option><option>M</option><option>L</option><option>XL</option></select></label>
         </div>
         <p class="product-price">${formatPrice(product.price)}</p>
       </div>
     </article>
   `).join("");
+
+  productGrid.querySelectorAll(".product-image").forEach((image) => {
+    const finishLoading = () => image.closest(".product-image-wrap").classList.remove("is-loading");
+    image.addEventListener("load", finishLoading, { once: true });
+    image.addEventListener("error", finishLoading, { once: true });
+    if (image.complete) finishLoading();
+  });
   
   emptyState.hidden = allVisibleProducts.length > 0;
   productGrid.hidden = allVisibleProducts.length === 0;
@@ -278,12 +274,12 @@ function renderCart() {
         <p class="cart-item-name">${item.name}</p>
         <p class="cart-item-price">${formatPrice(item.price)} · Dydis ${item.size || "S"}</p>
         <div class="quantity-controls" aria-label="${item.name} kiekis">
-          <button type="button" data-decrease-id="${item.id}" aria-label="Sumažinti kiekį">−</button>
+          <button type="button" data-decrease-id="${item.id}" data-size="${item.size || "S"}" aria-label="Sumažinti kiekį">−</button>
           <span>${item.quantity}</span>
-          <button type="button" data-increase-id="${item.id}" aria-label="Padidinti kiekį">+</button>
+          <button type="button" data-increase-id="${item.id}" data-size="${item.size || "S"}" aria-label="Padidinti kiekį">+</button>
         </div>
       </div>
-      <button class="remove-item" type="button" data-remove-id="${item.id}" aria-label="Pašalinti ${item.name}">×</button>
+      <button class="remove-item" type="button" data-remove-id="${item.id}" data-size="${item.size || "S"}" aria-label="Pašalinti ${item.name}">×</button>
     </div>
   `).join("");
 }
@@ -311,30 +307,31 @@ function renderWishlist() {
 function addToCart(productId, size = "S") {
   const product = products.find((item) => item.id === productId);
   if (!product) return;
-  
-  const existingItem = state.cart.find((item) => item.id === productId && (item.size || "S") === size);
+
+  const normalizedSize = size || "S";
+  const existingItem = state.cart.find((item) => item.id === productId && (item.size || "S") === normalizedSize);
   if (existingItem) existingItem.quantity += 1;
-  else state.cart.push({ ...product, size, quantity: 1 });
-  
-  saveCart();
+  else state.cart.push({ ...product, size: normalizedSize, quantity: 1 });
+
+  saveCart(state.cart);
   renderCart();
   showToast(`${product.name} pridėta į krepšelį`);
 }
 
-function updateQuantity(productId, change) {
-  const item = state.cart.find((cartItem) => cartItem.id === productId);
+function updateQuantity(productId, change, size = "S") {
+  const item = state.cart.find((cartItem) => cartItem.id === productId && (cartItem.size || "S") === size);
   if (!item) return;
-  
+
   item.quantity += change;
-  if (item.quantity <= 0) state.cart = state.cart.filter((cartItem) => cartItem.id !== productId);
-  
-  saveCart();
+  if (item.quantity <= 0) state.cart = state.cart.filter((cartItem) => !(cartItem.id === productId && (cartItem.size || "S") === size));
+
+  saveCart(state.cart);
   renderCart();
 }
 
-function removeFromCart(productId) {
-  state.cart = state.cart.filter((item) => item.id !== productId);
-  saveCart();
+function removeFromCart(productId, size = "S") {
+  state.cart = state.cart.filter((item) => !(item.id === productId && (item.size || "S") === size));
+  saveCart(state.cart);
   renderCart();
 }
 
@@ -354,43 +351,91 @@ function closeCart() {
   document.body.classList.remove("is-locked");
 }
 
-function openProductModal(productId) {
+function bindQuickViewControls() {
+  const quantityButtons = modalContent.querySelectorAll("[data-modal-quantity]");
+  const addButton = modalContent.querySelector("[data-modal-add-id]");
+
+  quantityButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const quantityOutput = document.querySelector("#modal-quantity-value");
+      if (!quantityOutput) return;
+
+      const currentVal = Number(quantityOutput.value || quantityOutput.textContent || 1);
+      const nextVal = Math.max(1, currentVal + Number(button.dataset.modalQuantity));
+      quantityOutput.textContent = String(nextVal);
+      quantityOutput.value = String(nextVal);
+    });
+  });
+
+  if (addButton) {
+    addButton.addEventListener("click", () => {
+      const quantityOutput = document.querySelector("#modal-quantity-value");
+      const sizeSelect = document.querySelector("#modal-size");
+      const quantity = Number(quantityOutput ? (quantityOutput.textContent || quantityOutput.value || 1) : 1);
+      const size = sizeSelect ? sizeSelect.value : "S";
+
+      for (let index = 0; index < quantity; index += 1) {
+        addToCart(Number(addButton.dataset.modalAddId), size);
+      }
+
+      productModal.close();
+      openCart();
+    });
+  }
+}
+
+function openProductModal(productId, updateHistory = true) {
   const product = getProduct(productId);
   if (!product) return;
-  
+
   modalContent.innerHTML = `
     <div class="modal-product-layout">
-      <img src="${product.image}" alt="${product.name}" class="modal-image">
+      <div class="modal-media">
+        <img src="${product.image}" alt="${product.name}" class="modal-image">
+        ${product.badge ? `<span class="product-badge modal-badge">${product.badge}</span>` : ""}
+      </div>
       <div class="modal-details">
-        <span class="product-category">${product.categoryLabel}</span>
+        <p class="eyebrow modal-eyebrow">${product.categoryLabel}</p>
         <h2>${product.name}</h2>
-        <p class="modal-price">${formatPrice(product.price)}</p>
-        <p class="modal-description">${product.description}</p>
-        <div class="modal-options">
-          <label for="modal-size">Dydis:</label>
-          <select id="modal-size" class="modal-select">
-            <option value="XS">XS</option>
-            <option value="S" selected>S</option>
-            <option value="M">M</option>
-            <option value="L">L</option>
-            <option value="XL">XL</option>
-          </select>
+        <div class="modal-price-row">
+          <p class="modal-price">${formatPrice(product.price)}</p>
+          <span class="modal-status">Sandėlyje</span>
         </div>
-        <div class="modal-quantity-row">
-          <span>Kiekis:</span>
-          <div class="quantity-controls">
-            <button type="button" data-modal-quantity="-1">−</button>
-            <span id="modal-quantity-value">1</span>
-            <button type="button" data-modal-quantity="1">+</button>
+        <p class="modal-description">${product.description}</p>
+
+        <div class="modal-options">
+          <div class="modal-option-field">
+            <label for="modal-size">Dydis</label>
+            <select id="modal-size" class="modal-select">
+              <option value="XS">XS</option>
+              <option value="S" selected>S</option>
+              <option value="M">M</option>
+              <option value="L">L</option>
+              <option value="XL">XL</option>
+            </select>
+          </div>
+
+          <div class="modal-option-field">
+            <span class="modal-option-label">Kiekis</span>
+            <div class="modal-quantity" aria-label="Kiekis">
+              <button type="button" data-modal-quantity="-1" aria-label="Sumažinti kiekį">−</button>
+              <span id="modal-quantity-value">1</span>
+              <button type="button" data-modal-quantity="1" aria-label="Padidinti kiekį">+</button>
+            </div>
           </div>
         </div>
-        <button class="button button-primary" type="button" data-modal-add-id="${product.id}">Pridėti į krepšelį</button>
+
+        <button class="button button-primary modal-action-button" type="button" data-modal-add-id="${product.id}">Pridėti į krepšelį <span aria-hidden="true">↗</span></button>
       </div>
     </div>
   `;
-  
+
+  bindQuickViewControls();
+  state.openProductId = productId;
+  productModal.dataset.productId = String(productId);
   productModal.showModal();
   document.body.classList.add("is-locked");
+  if (updateHistory) syncUrl();
 }
 
 function openWishlist() {
@@ -417,11 +462,23 @@ function openCheckout() {
 }
 
 function showToast(message) {
+  toastQueue.push(message);
+  if (toastQueue.length === 1) displayNextToast();
+}
+
+function displayNextToast() {
   const toast = document.querySelector("#toast");
-  toast.textContent = message;
+  if (!toastQueue.length) return;
+  toast.textContent = toastQueue[0];
   toast.classList.add("is-visible");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 2400);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove("is-visible");
+    toastTimer = setTimeout(() => {
+      toastQueue.shift();
+      displayNextToast();
+    }, 220);
+  }, 2400);
 }
 
 document.querySelector("#filter-list").addEventListener("click", (event) => {
@@ -429,6 +486,7 @@ document.querySelector("#filter-list").addEventListener("click", (event) => {
   if (!button) return;
   state.category = button.dataset.category;
   state.visibleLimit = 16;
+  syncUrl();
   document.querySelectorAll(".filter-button").forEach((filterButton) => filterButton.classList.toggle("is-active", filterButton === button));
   renderProducts();
 });
@@ -436,41 +494,77 @@ document.querySelector("#filter-list").addEventListener("click", (event) => {
 document.querySelector("#wishlist-filter").addEventListener("click", () => {
   state.wishlistOnly = !state.wishlistOnly;
   state.visibleLimit = 16;
+  syncUrl();
   renderProducts();
 });
 
-searchInput.addEventListener("input", (event) => {
-  state.search = event.target.value;
-  state.visibleLimit = 16;
-  renderProducts();
-});
+if (searchInput) {
+  searchInput.value = state.search;
+  searchInput.addEventListener("input", (event) => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => applySearch(event.target.value), 300);
+  });
+}
 
 sortSelect.addEventListener("change", (event) => {
   state.sort = event.target.value;
   state.visibleLimit = 16;
+  syncUrl();
   renderProducts();
 });
 
-document.querySelector("#search-form").addEventListener("submit", (event) => event.preventDefault());
+sortSelect.value = state.sort;
+updatePriceControls();
+
+document.querySelector("#min-price").addEventListener("input", (event) => {
+  state.minPrice = Number(event.target.value);
+  updatePriceControls();
+  state.visibleLimit = 16;
+  syncUrl("replaceState");
+  renderProducts();
+});
+
+document.querySelector("#max-price").addEventListener("input", (event) => {
+  state.maxPrice = Number(event.target.value);
+  updatePriceControls();
+  state.visibleLimit = 16;
+  syncUrl("replaceState");
+  renderProducts();
+});
+
+document.querySelector("#search-form").addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (searchInput) {
+    clearTimeout(searchTimer);
+    applySearch(searchInput.value);
+  }
+});
 
 productGrid.addEventListener("click", (event) => {
   const addButton = event.target.closest("[data-add-id]");
   const cardButton = event.target.closest("[data-product-id]");
   const favoriteButton = event.target.closest("[data-favorite-id]");
-  if (addButton) addToCart(Number(addButton.dataset.addId));
+  if (addButton) {
+    const card = addButton.closest(".product-card");
+    addToCart(Number(addButton.dataset.addId), card.querySelector("[data-size-select]").value);
+  }
   else if (favoriteButton) toggleFavorite(Number(favoriteButton.dataset.favoriteId));
   else if (cardButton) openProductModal(Number(cardButton.dataset.productId));
 });
 
 function toggleFavorite(productId) {
-  if (state.favorites.includes(productId)) {
-    state.favorites = state.favorites.filter((id) => id !== productId);
+  const nextFavorites = new Set(state.favorites);
+
+  if (nextFavorites.has(productId)) {
+    nextFavorites.delete(productId);
     showToast("Pašalinta iš mėgstamiausių");
   } else {
-    state.favorites.push(productId);
+    nextFavorites.add(productId);
     showToast("Pridėta į mėgstamiausius");
   }
-  saveFavorites();
+
+  state.favorites = [...nextFavorites];
+  saveFavorites(state.favorites);
   renderProducts();
 }
 
@@ -478,9 +572,10 @@ cartItems.addEventListener("click", (event) => {
   const increase = event.target.closest("[data-increase-id]");
   const decrease = event.target.closest("[data-decrease-id]");
   const remove = event.target.closest("[data-remove-id]");
-  if (increase) updateQuantity(Number(increase.dataset.increaseId), 1);
-  if (decrease) updateQuantity(Number(decrease.dataset.decreaseId), -1);
-  if (remove) removeFromCart(Number(remove.dataset.removeId));
+
+  if (increase) updateQuantity(Number(increase.dataset.increaseId), 1, increase.dataset.size || "S");
+  if (decrease) updateQuantity(Number(decrease.dataset.decreaseId), -1, decrease.dataset.size || "S");
+  if (remove) removeFromCart(Number(remove.dataset.removeId), remove.dataset.size || "S");
 });
 
 wishlistItems.addEventListener("click", (event) => {
@@ -510,6 +605,7 @@ document.querySelector("#clear-search").addEventListener("click", () => {
   searchInput.value = "";
   state.wishlistOnly = false;
   state.visibleLimit = 16;
+  syncUrl();
   renderProducts();
 });
 
@@ -532,26 +628,16 @@ productModal.addEventListener("click", (event) => {
   if (event.target === productModal) productModal.close();
 });
 
-productModal.addEventListener("click", (event) => {
-  const quantityButton = event.target.closest("[data-modal-quantity]");
-  const addButton = event.target.closest("[data-modal-add-id]");
-  if (quantityButton) {
-    const quantityOutput = document.querySelector("#modal-quantity-value");
-    let currentVal = Number(quantityOutput.value || quantityOutput.textContent);
-    let newVal = Math.max(1, currentVal + Number(quantityButton.dataset.modalQuantity));
-    quantityOutput.textContent = newVal;
-    quantityOutput.value = newVal;
-  }
-  if (addButton) {
-    const quantity = Number(document.querySelector("#modal-quantity-value").textContent || 1);
-    const size = document.querySelector("#modal-size").value;
-    for (let index = 0; index < quantity; index += 1) addToCart(Number(addButton.dataset.addId), size);
-    productModal.close();
-    openCart();
+
+productModal.addEventListener("close", () => {
+  document.body.classList.remove("is-locked");
+  const wasRestored = productModal.dataset.restoring === "true";
+  delete productModal.dataset.restoring;
+  if (!wasRestored) {
+    state.openProductId = null;
+    syncUrl("replaceState");
   }
 });
-
-productModal.addEventListener("close", () => document.body.classList.remove("is-locked"));
 document.querySelector("#checkout-close").addEventListener("click", () => checkoutModal.close());
 checkoutModal.addEventListener("close", () => document.body.classList.remove("is-locked"));
 
@@ -559,7 +645,7 @@ document.querySelector("#checkout-form").addEventListener("submit", (event) => {
   event.preventDefault();
   const orderNumber = `NL-${Math.floor(10000 + Math.random() * 90000)}`;
   state.cart = [];
-  saveCart();
+  saveCart(state.cart);
   renderCart();
   checkoutModal.close();
   event.currentTarget.reset();
@@ -577,9 +663,42 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && wishlistPanel.classList.contains("is-open")) closeWishlist();
 });
 
+function restoreFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  state.category = ["all", "clothing", "shoes", "accessories"].includes(params.get("category")) ? params.get("category") : "all";
+  state.search = params.get("q") || "";
+  state.sort = ["featured", "price-low", "price-high", "name", "new", "bestseller"].includes(params.get("sort")) ? params.get("sort") : "featured";
+  state.minPrice = Math.max(0, Math.min(200, Number(params.get("min")) || 0));
+  state.maxPrice = Math.max(0, Math.min(200, params.has("max") ? Number(params.get("max")) : 200));
+  if (state.minPrice > state.maxPrice) state.minPrice = state.maxPrice;
+  state.wishlistOnly = params.get("favorites") === "1";
+  state.visibleLimit = 16;
+  const productId = Number(params.get("product"));
+  state.openProductId = productId && getProduct(productId) ? productId : null;
+  searchInput.value = state.search;
+  sortSelect.value = state.sort;
+  updatePriceControls();
+  document.querySelectorAll(".filter-button").forEach((button) => button.classList.toggle("is-active", button.dataset.category === state.category));
+  renderProducts();
+
+  if (productId && getProduct(productId)) {
+    if (productModal.open && Number(productModal.dataset.productId) !== productId) {
+      productModal.dataset.restoring = "true";
+      productModal.addEventListener("close", () => openProductModal(productId, false), { once: true });
+      productModal.close();
+    } else if (!productModal.open) {
+      openProductModal(productId, false);
+    }
+  } else if (productModal.open) {
+    productModal.dataset.restoring = "true";
+    productModal.close();
+  }
+}
+
+window.addEventListener("popstate", restoreFromUrl);
+
 // INITIAL RENDER
 renderProducts();
 renderCart();
-
-// DINAMINIS NUOTRAUKŲ KROVIMAS IŠ UNSPLASH API
-loadDynamicProductImages();
+document.querySelectorAll(".filter-button").forEach((button) => button.classList.toggle("is-active", button.dataset.category === state.category));
+if (state.openProductId && getProduct(state.openProductId)) openProductModal(state.openProductId, false);

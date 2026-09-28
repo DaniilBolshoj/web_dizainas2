@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <script src="app.js" defer></script>
+  <script type="module" src="app.js"></script>
 </head>
 <body>
   <div class="announcement-bar">Nemokamas pristatymas nuo 100 € <span aria-hidden="true">·</span> Grąžinimas per 30 dienų</div>
@@ -19,12 +19,6 @@
         <span class="brand-mark">N</span>
         <span>Northline</span>
       </a>
-
-      <form class="search" id="search-form" role="search">
-        <label class="sr-only" for="search-input">Ieškoti prekių</label>
-        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
-        <input id="search-input" type="search" placeholder="Ieškoti prekių..." autocomplete="off">
-      </form>
 
       <nav class="header-nav" aria-label="Pagrindinė navigacija">
         <a href="#products">Kolekcija</a>
@@ -78,12 +72,25 @@
       </div>
 
       <div class="catalog-toolbar">
-        <div class="filter-list" id="filter-list" role="group" aria-label="Filtruoti pagal kategoriją">
-          <button class="filter-button is-active" type="button" data-category="all">Visos prekės</button>
-          <button class="filter-button" type="button" data-category="clothing">Drabužiai</button>
-          <button class="filter-button" type="button" data-category="shoes">Avalynė</button>
-          <button class="filter-button" type="button" data-category="accessories">Aksesuarai</button>
+        <div class="toolbar-main-row">
+          <form class="search catalog-search" id="search-form" role="search">
+            <label class="sr-only" for="search-input">Ieškoti prekių</label>
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+            <input id="search-input" type="search" placeholder="Ieškoti prekių..." autocomplete="off">
+          </form>
+
+          <div class="filter-list" id="filter-list" role="group" aria-label="Filtruoti pagal kategoriją">
+            <button class="filter-button is-active" type="button" data-category="all">Visos prekės</button>
+            <button class="filter-button" type="button" data-category="clothing">Drabužiai</button>
+            <button class="filter-button" type="button" data-category="shoes">Avalynė</button>
+            <button class="filter-button" type="button" data-category="accessories">Aksesuarai</button>
+          </div>
+          <div class="price-filter" aria-label="Filtruoti pagal kainą">
+            <label><span id="min-price-label">Nuo 0 €</span><input id="min-price" type="range" min="0" max="200" step="5" value="0" aria-label="Mažiausia kaina"></label>
+            <label><span id="max-price-label">Iki 200 €</span><input id="max-price" type="range" min="0" max="200" step="5" value="200" aria-label="Didžiausia kaina"></label>
+          </div>
         </div>
+
         <div class="toolbar-actions">
           <button class="wishlist-filter" id="wishlist-filter" type="button" aria-pressed="false">♡ Mėgstamiausios</button>
           <label class="sort-control">
@@ -93,6 +100,8 @@
               <option value="price-low">Kaina: nuo mažiausios</option>
               <option value="price-high">Kaina: nuo didžiausios</option>
               <option value="name">Pagal pavadinimą</option>
+              <option value="new">Naujos prekės</option>
+              <option value="bestseller">Bestseller</option>
             </select>
           </label>
         </div>
